@@ -220,7 +220,7 @@ hist(age, main = "Histogram for age", xlab = "Age", col = "blue")
 # List the occupations in the comments, as well as showing the code you used to determine that.
 occ <- tapply(data$`hours-per-week`, data$occupation, mean)
 sort(occ, decreasing  = TRUE)
-# the top 3 occuspations are:- 1.Farming-fishing
+# the top 3 occupations are:- 1.Farming-fishing
 #                              2.Exec-managerial 
 #                              3. Transport-moving
 
@@ -250,22 +250,25 @@ charCombos <- function(string, z){
   for(i in seq(from = 1, to = nchar(string))){
     j <- i + z -1
     if(j <= nchar(string)){
-      qwerty <- c(substr(string, i, j))
-      if (qwerty %in% val == FALSE){
-        val[i] <- qwerty
-        count[match(c(qwerty),val)] <- count[match(c(qwerty),val)] + 1
-      }
-      else{
-        count[match(c(qwerty),val)] <- count[match(c(qwerty),val)]+1
-        print(count)
-      }
-      names(val) <- count
+      val[i] <- c(substr(string, i, j))
+      # if (qwerty %in% val == FALSE){
+      #   val[i] <- qwerty
+      #   count[match(c(qwerty),val)] <- count[match(c(qwerty),val)] + 1
+      # }
+      # else{
+      #   count[match(c(qwerty),val)] <- count[match(c(qwerty),val)]+1
+      #   print(count)
+      # }
+      # names(val) <- count
     }
+    
   }
-  for (i in val){
-    print(i)
-    print(count)
-  }
+  return(table(val))
+  
+  # for (i in val){
+  #   print(i)
+  #   print(count)
+  # }
 }
 
 
