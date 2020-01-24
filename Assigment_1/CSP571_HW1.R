@@ -212,18 +212,23 @@ data
 # age to be numeric first. Save this histogram and include it with your
 # submission
 age <- as.numeric(unlist(data['age']))
-hist(age, main = "Hsitogram for age", xlab = "Age", col = "blue")
+hist(age, main = "Histogram for age", xlab = "Age", col = "blue")
 
 # 2 points
 # Question 11: Determine the top 3 occupations with the highest average hours-per-week
 # Hint: One way to do this is to use tapply
 # List the occupations in the comments, as well as showing the code you used to determine that.
+occ <- tapply(data$`hours-per-week`, data$occupation, mean)
+sort(occ, decreasing  = TRUE)
+# the top 3 occuspations are:- 1.Farming-fishing
+#                              2.Exec-managerial 
+#                              3. Transport-moving
 
 
 # 2 points
 # Question 12: Your friend works for the government and claims that in order to make more money, you have to work
 # longer hours. Use this data set to determine if your friend is right. State your conclusion in the comments.
-
+tapply(data$`hours-per-week`, data$`income-level`, mean)
 
 # 3 points
 # Question 13: Implement a function call charCombos from scratch 
@@ -237,7 +242,18 @@ hist(age, main = "Hsitogram for age", xlab = "Age", col = "blue")
 # Hint, use the substr function
 
  
-charCombos <- 
+charCombos <- function(string, z){
+  count <- 0
+  for(i in 1:length((string))){
+    j <- i + z -1
+    if (j < length(string)){
+      print(substr(string, i, j))
+      j <- j + 1
+      # count <- count + 1
+    }
+  }
+  # return(count)
+}
 
 myTestString <- 'abcbcb'
 charCombos(string = myTestString, z= 2)
