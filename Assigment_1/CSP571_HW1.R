@@ -243,22 +243,35 @@ tapply(data$`hours-per-week`, data$`income-level`, mean)
 
  
 charCombos <- function(string, z){
+  # q <- c(substr(string, 1:(nchar(string)-z+1), z:nchar(string)))
+  # return(q)
+  val <- character(0)
   count <- 0
-  for(i in 1:length((string))){
+  for(i in seq(from = 1, to = nchar(string))){
     j <- i + z -1
-    if (j < length(string)){
-      print(substr(string, i, j))
-      j <- j + 1
-      # count <- count + 1
+    if(j <= nchar(string)){
+      qwerty <- c(substr(string, i, j))
+      if (qwerty %in% val == FALSE){
+        val[i] <- qwerty
+        count[match(c(qwerty),val)] <- count[match(c(qwerty),val)] + 1
+      }
+      else{
+        count[match(c(qwerty),val)] <- count[match(c(qwerty),val)]+1
+        print(count)
+      }
+      names(val) <- count
     }
   }
-  # return(count)
+  for (i in val){
+    print(i)
+    print(count)
+  }
 }
+
 
 myTestString <- 'abcbcb'
 charCombos(string = myTestString, z= 2)
 charCombos(string = myTestString, z= 3)
-
 
 # 3 points
 # Question 14: In the traditional English language, students are taught
@@ -286,4 +299,4 @@ pctQU <-
 # most commonly used letters after q that are NOT equal to u sorted in descending 
 # order of frequency.
 
-top5 <-
+top5 <- 
