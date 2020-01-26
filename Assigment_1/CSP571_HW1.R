@@ -263,7 +263,7 @@ charCombos <- function(string, z){
     }
     
   }
-  return(table(val))
+  table(unlist(val))
   
   # for (i in val){
   #   print(i)
@@ -293,13 +293,72 @@ charCombos(string = myTestString, z= 3)
 # issues with the length of this run-time, check your code. 
 
 bigListOfWords <- readLines('https://raw.githubusercontent.com/dwyl/english-words/master/words.txt')
+# count_qu<- 0
+# count_q <- 0
+# for (i in bigListOfWords){
+#   alpha <- c(strsplit(i, ""))
+#   if(grepl("qu", i)){
+#     count_qu <- count_qu+1
+#   }
+#   for(j in alpha){
+#     if("q" %in% j){
+#       count_q <- count_q+1
+#     }
+#   }
+#     
+# }
+# print(count_qu)
+# print(count_q)
+# pctQU <- (count_qu/count_q) *100
 
 
-pctQU <-
+count_qu=0
+for (i in bigListOfWords){
+  Str_qu<-charCombos(string = i, z= 2)  
+  Str_qu<-as.data.frame(Str_qu)
+  if (("qu" %in%  as.vector(Str_qu$Var1))==TRUE)
+  {
+    count_qu=count_qu+1  
+  }
+  
+  
+}
+count_q <- 0
+for (i in bigListOfWords){
+  Str_q<-charCombos(string = i, z= 1)  
+  Str_q<-as.data.frame(Str_q)
+  if (("q" %in%  as.vector(Str_q$Var1))==TRUE)
+  {
+    count_q=count_q+1  # count with words containing "qu"
+  }
+  
+  
+}
+pctQU <- (count_qu/count_q) *100
 
 # 3 points
 # Question 15: Find the top 5 
 # most commonly used letters after q that are NOT equal to u sorted in descending 
 # order of frequency.
 
-top5 <- 
+values=0
+p=1
+for (i in bigListOfWords)
+{
+  two_word_extract<-charCombos(string = i, z= 2)  
+  two_word_extract<-as.data.frame(two_word_extract)
+  for (j in as.vector(two_word_extract$Var1))
+  {
+    if (substr(j,1,1)=="q")
+      values[p]<-c(j)
+    p=p+1
+  }
+}
+
+
+alpha_val <- table(values)
+alpha_val <- as.data.frame(alpha_val)
+a_val <- alpha_val[order(as.vector(alpha_val$Freq), decreasing = TRUE),]
+a_val
+top5 <- a_val[2:6,]
+top5
