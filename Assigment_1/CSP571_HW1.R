@@ -9,6 +9,7 @@
 # Question 1: Create a variable named "myName" and assign to have a value of your
 # preferred name. Create a varaible named "myEmail" and assign it to have a value
 # of your email.
+
 myName <- "Rahul Nair"
 myEmail <- "rnair14@hawk.iit.edu"
 
@@ -24,6 +25,7 @@ myEmail <- "rnair14@hawk.iit.edu"
 # compute summary statistics. However, we can use this as an opportunity to practice our R
 # while having an easy way to check for mistakes by comparing our function output with the 
 # default R function output. 
+
 myVector <- seq(from = 99, to = 10000, by = 1)
 myVector <- sample(myVector)
 
@@ -80,9 +82,8 @@ Median
 # TRUE if that number is divisible by 127 FALSE if that number is not divisible
 # by 127.  For example, divis(127*5) should return TRUE and divis(80)
 # should return FALSE. Hint: %% is the modulo operator in R.
+
 divis <- function(num){
-  # num <- readline(prompt = "ENTER THE NUMBER: ")
-  # num <- as.integer(num)
   if (num %% 127 == 0){
     return(TRUE)
   }
@@ -100,16 +101,6 @@ divis(num)
 # defined in Question 2, deterine how many integers between 100 and 10000 are
 # divisible by 127. Assign it to the variable below.
 
-# countDivis <- function(x){
-#   count <- 0
-#   for (i in 1:length(x)){
-#     if(x[i] %% 127 == 0){
-#       count <- count + 1
-#     }
-#   }
-#   return(count)
-# }
-# countDivis(myVector)
 countDivis <- 0
 for (i in myVector){
   bool <- divis(i)
@@ -123,6 +114,7 @@ countDivis
 # 1 point
 # Question 5: Using the vector of names below, write code to return the 9th
 # last name in the vector.
+
 names <- c("Kermit Chacko",
            "Eleonore Chien",
            "Genny Layne",
@@ -150,6 +142,7 @@ ninthLastName
 # 1 point
 # Question 6: Using the vector "names" from Question 5, write code to
 # determine how many last names start with L.
+
 countLastNameStartsWithL <- function(x){
   last_names <- c(sapply(strsplit(x, " "), tail, 1))
   last_name_first_alpha <- c(strsplit(last_names, ""))
@@ -169,14 +162,15 @@ NameStartsWithL
 # Question 7: Using the vector "names" from Question 5, write code to create a
 # list that allows the user to input a first name and retrieve the last name.
 # For example, nameMap["Krista"] should return "Alto".
+
 nameMap <- vector(mode="list", length=length(names))
 last_name <- c(sapply(strsplit(names, " "), tail, 1))
 names(last_name) <- c(sapply(strsplit(names, " "), head, 1))
 first_name <- names(last_name)
-p <- 1
+j <- 1
 for (i in 1:length(names)){
-  nameMap[[p]]<-last_name[p]
-  p <- p+1
+  nameMap[[j]]<-last_name[j]
+  j <- j+1
 }
 names(nameMap) <- c(first_name)
 nameMap['Genny']
@@ -188,7 +182,7 @@ nameMap['Genny']
 # Load this into a dataframe. Rename the variables to be the proper names
 # listed on the website. Name the income attribute (">50K", "<=50K") to be
 # incomeLevel
-library(plyr)
+
 data <- read.csv("adult.data")
 colnames(data) <- c("age", "workclass", "fnlwgt", "education", "education-num", "marital-status", "occupation", "relationship", "race", "sex", "capital-gain", "capital-loss", "hours-per-week", "native-country", "income-level")
 
@@ -222,6 +216,7 @@ data
 # Question 10: Create a histogram of the 'age'. Hint: You may need to convert
 # age to be numeric first. Save this histogram and include it with your
 # submission
+
 age <- as.numeric(unlist(data['age']))
 hist(age, main = "Histogram for age", xlab = "Age", col = "blue")
 
@@ -230,6 +225,7 @@ hist(age, main = "Histogram for age", xlab = "Age", col = "blue")
 # Question 11: Determine the top 3 occupations with the highest average hours-per-week
 # Hint: One way to do this is to use tapply
 # List the occupations in the comments, as well as showing the code you used to determine that.
+
 occ <- tapply(data$`hours-per-week`, data$occupation, mean)
 sort(occ, decreasing  = TRUE)
 # the top 3 occupations are:- 1.Farming-fishing
@@ -240,8 +236,9 @@ sort(occ, decreasing  = TRUE)
 # 2 points
 # Question 12: Your friend works for the government and claims that in order to make more money, you have to work
 # longer hours. Use this data set to determine if your friend is right. State your conclusion in the comments.
+
 tapply(data$`hours-per-week`, data$`income-level`, mean)
-# The above operation shows us that the mean working hours of employees earning salary less than $50k is 38.84 hrs (approx.)
+# The above operation shows us that the mean working hours of employees earning salary less than or equal to $50k is 38.84 hrs (approx.)
 # And that of employees earning greater than $50k is 45.47 hrs (approx.). 
 # This concludes that people working more hours tend to earn more than those who work lesser hours. 
 # Therefore, his friend is right.
@@ -257,9 +254,8 @@ tapply(data$`hours-per-week`, data$`income-level`, mean)
 # charCombos('abcbcb', z=3) should return
 # abc: 1, bcb: 2, cbc: 1
 # Hint, use the substr function
+
 charCombos <- function(string, z){
-  # q <- c(substr(string, 1:(nchar(string)-z+1), z:nchar(string)))
-  # return(q)
   val <- character(0)
   count <- 0
   for(i in seq(from = 1, to = nchar(string))){
@@ -290,40 +286,24 @@ charCombos(string = myTestString, z= 3)
 # Note for words with multiple q's or multiple q-u's, count them once.
 # This can be rather naively done and achieve short run times. If you are
 # issues with the length of this run-time, check your code. 
+
 bigListOfWords <- readLines('https://raw.githubusercontent.com/dwyl/english-words/master/words.txt')
-# count_qu<- 0
-# count_q <- 0
-# for (i in bigListOfWords){
-#   alpha <- c(strsplit(i, ""))
-#   if(grepl("qu", i)){
-#     count_qu <- count_qu+1
-#   }
-#   for(j in alpha){
-#     if("q" %in% j){
-#       count_q <- count_q+1
-#     }
-#   }
-#     
-# }
-# print(count_qu)
-# print(count_q)
-# pctQU <- (count_qu/count_q) *100
-count_qu=0
+count_qu <- 0
 for (i in bigListOfWords){
-  Str_qu<-charCombos(string = i, z= 2)  
-  Str_qu<-as.data.frame(Str_qu)
-  if (("qu" %in%  as.vector(Str_qu$Var1))==TRUE)
+  Str_qu <- charCombos(string = i, z= 2)  
+  Str_qu <- as.data.frame(Str_qu)
+  if (("qu" %in%  as.vector(Str_qu$Var1)) == TRUE)
   {
-    count_qu=count_qu+1  
+    count_qu <- count_qu+1  
   }
 }
 count_q <- 0
 for (i in bigListOfWords){
-  Str_q<-charCombos(string = i, z= 1)  
-  Str_q<-as.data.frame(Str_q)
-  if (("q" %in%  as.vector(Str_q$Var1))==TRUE)
+  Str_q <- charCombos(string = i, z= 1)  
+  Str_q <- as.data.frame(Str_q)
+  if (("q" %in%  as.vector(Str_q$Var1)) == TRUE)
   {
-    count_q=count_q+1  
+    count_q <- count_q+1  
   }
 }
 pctQU <- (count_qu/count_q) *100
@@ -335,16 +315,16 @@ pctQU
 # Question 15: Find the top 5 
 # most commonly used letters after q that are NOT equal to u sorted in descending 
 # order of frequency.
-values=0
-p=1
+values <- 0
+iter <- 1
 for (i in bigListOfWords){
   two_word_extract<-charCombos(string = i, z= 2)  
   two_word_extract<-as.data.frame(two_word_extract)
   for (j in as.vector(two_word_extract$Var1))
   {
-    if (substr(j,1,1)=="q")
-      values[p]<-c(j)
-    p=p+1
+    if (substr(j,1,1) == "q")
+      values[iter] <- c(j)
+    iter <- iter+1
   }
 }
 alpha_val <- table(values)
