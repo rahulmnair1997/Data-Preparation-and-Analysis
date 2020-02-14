@@ -55,18 +55,18 @@ levelplot(c, main="correlation plot", xlab="", ylab="", col.regions=rgb.palette(
 # 4. Identify the top 3 strongest absolute correlations in the data set. Save your output.
 library(tidyr)
 library(tibble)
+
 absolute <- abs(c)
 absoluted_cor_mat <- absolute %>%
   as.data.frame %>%
   rownames_to_column(var = 'var1') %>%
   gather(var2, value, -var1)
 
-# sorted_value <- sort(d2$value, decreasing = TRUE)
 absoluted_cor_mat <- absoluted_cor_mat[order(d2$value, decreasing = TRUE), ]
-# 
 absoluted_cor_mat
 top_3 <- head(absoluted_cor_mat, 3)
 top_3
+
 # 5. Create a new variable call ageGroup quartiles. Divide the age variable
 # into four even sections and assign it to one quartile.
 
