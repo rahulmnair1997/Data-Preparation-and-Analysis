@@ -113,8 +113,19 @@ food1 <- c(164,   172,   168,   177, 	156, 	195)
 food2 <- c(178,   191, 	197, 	182, 	185, 	177)
 food3 <- c(175, 	193, 	178, 	171, 	163, 	176)
 food4 <- c(155, 	166, 	149, 	164, 	170, 	168)
+treatment <- c(
+   rep('food1', 6)
+  , rep('food2', 6)
+  , rep('food3', 6)
+  , rep('food4', 6)
+  )
+alpha = .05
+calorie_count <- c(food1, food2, food3, food4)
+df = data.frame(treatment, calorie_count)
 
-
+fit <- aov(calorie_count ~ treatment)
+fit
+summary(fit)
 
 
 # 10. Determine how many
