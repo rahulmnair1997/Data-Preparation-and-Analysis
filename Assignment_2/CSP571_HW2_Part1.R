@@ -76,18 +76,25 @@ top_3
 
 # 6. Go to the website listed below. Convert the html table into a
 # dataframe with columns NO, Player, Highlights
+
 library('rvest')
 library('tidyr')
 url = 'http://www.espn.com/nfl/superbowl/history/mvps'
-
-
-
+web_page <- read_html(url)
+SuperBowl <- html_nodes(web_page, css = 'table')
+t <- SuperBowl[[1]]
+sb <- html_table(t)
+sb <- sb[-(1:2),]
+names(sb) <- c("Number", "Player", "Highlights")
+sb$Number <- 1:nrow(sb)
+head(sb)
 
 # 7.Extract the names of the MVPs, Position and Team into columns
 # MVP1, MVP2, Position, Team
-
-
-
+sb <- separate(sb, Player, c('MVP', 'Position', 'Team')
+               , sep=', ' # We want to split this where the comma is located
+               , remove=TRUE)
+head(sb)
 
 
 # 8. Determine the 90th%, 92.5th%, 95th%, 97.5th% and 99th% confidence intervals
@@ -108,6 +115,11 @@ food3 <- c(175, 	193, 	178, 	171, 	163, 	176)
 food4 <- c(155, 	166, 	149, 	164, 	170, 	168)
 
 
+
+
 # 10. Determine how many
 # Tuesdays fell on the first of the month
 # during the 19th century (1 Jan 1801 to 31 Dec 1901).
+
+
+
