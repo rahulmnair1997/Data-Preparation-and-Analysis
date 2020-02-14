@@ -10,7 +10,7 @@ data(BostonHousing)
 
 # 1. Create a scatterplot matrix of all variables in the data set. Save your output.
 
-pairs(x = d, main = "Scatter plot matrix")
+pairs(x = BostonHousing, main = "Scatter plot matrix")
 
 
 
@@ -22,27 +22,51 @@ pairs(x = d, main = "Scatter plot matrix")
 
 indices <- which(sapply(BostonHousing, is.numeric))
 # columns <- names(BostonHousing)[which(sapply(BostonHousing, is.numeric))]
-columns <- names(BostonHousing)[which(sapply(BostonHousing, is.numeric))]
-columns 
+# columns <- names(BostonHousing)[which(sapply(BostonHousing, is.numeric))]
+columns <- colnames(BostonHousing[indices])
+for (i in 1:length(columns)){
+  print(i)
+}
 for (i in indices){
-  boxplot(x = BostonHousing[i], main = )
+  boxplot(x = BostonHousing[i])
 }
-for ( i in indices){
-  print(columns[i])
-}
-indices
+# for ( i in indices){
+#   print(columns[i])
+# }
+# columns <- names(indices)
+# columns
+# for (i in indices){
+#   print(i)
+# }
 # 3. Create a correlation matrix and correlation plot
 # for the BostonHousing data set. Save your output.
 
-
+correlation <- BostonHousing[indices]
+# round(cor(correlation),2)
+c <- cor(correlation)
+c
+library(lattice)
+hor <- c(BostonHousing[indices])
+ver <- paste(hor, sep="")
+rgb.palette <- colorRampPalette(c("blue", "red"), space = "rgb")
+levelplot(c, main="correlation plot", xlab="", ylab="", col.regions=rgb.palette(120), cuts=100, at=seq(0,1,0.01))
 
 
 # 4. Identify the top 3 strongest absolute correlations in the data set. Save your output.
+library(tidyr)
+library(tibble)
+absolute <- abs(c)
+absoluted_cor_mat <- absolute %>%
+  as.data.frame %>%
+  rownames_to_column(var = 'var1') %>%
+  gather(var2, value, -var1)
 
-
-
-
-
+# sorted_value <- sort(d2$value, decreasing = TRUE)
+absoluted_cor_mat <- absoluted_cor_mat[order(d2$value, decreasing = TRUE), ]
+# 
+absoluted_cor_mat
+top_3 <- head(absoluted_cor_mat, 3)
+top_3
 # 5. Create a new variable call ageGroup quartiles. Divide the age variable
 # into four even sections and assign it to one quartile.
 
