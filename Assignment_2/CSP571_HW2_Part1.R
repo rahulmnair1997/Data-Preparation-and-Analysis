@@ -57,7 +57,8 @@ top_3
 
 # 5. Create a new variable call ageGroup quartiles. Divide the age variable
 # into four even sections and assign it to one quartile.
-?cut
+ageGroup <- cut(BostonHousing$age, breaks = min(BostonHousing$age):max(BostonHousing$age),labels = c("Q1", "Q2", "Q3", "Q4"), include.lowest = TRUE)
+ageGroup
 x= BostonHousing$age
 qnt <- quantile(x,seq(0,1,.25))
 qnt
@@ -121,6 +122,14 @@ summary(fit)
 # Tuesdays fell on the first of the month
 # during the 19th century (1 Jan 1801 to 31 Dec 1901).
 counter < -0
+
+
+Z <- stats::rnorm(10000)
+table(cut(Z, breaks = -6:6))
+sum(table(cut(Z, breaks = -6:6, labels = FALSE)))
+sum(graphics::hist(Z, breaks = -6:6, plot = FALSE)$counts)
+
+
 
 
 
