@@ -21,23 +21,11 @@ pairs(x = BostonHousing, main = "Scatter plot matrix")
 # all have proper titles
 
 indices <- which(sapply(BostonHousing, is.numeric))
-# columns <- names(BostonHousing)[which(sapply(BostonHousing, is.numeric))]
-# columns <- names(BostonHousing)[which(sapply(BostonHousing, is.numeric))]
-columns <- colnames(BostonHousing[indices])
-for (i in 1:length(columns)){
-  print(i)
-}
+
 for (i in indices){
-  boxplot(x = BostonHousing[i])
+  boxplot(x = BostonHousing[i], main = names(BostonHousing[i]))
 }
-# for ( i in indices){
-#   print(columns[i])
-# }
-# columns <- names(indices)
-# columns
-# for (i in indices){
-#   print(i)
-# }
+
 # 3. Create a correlation matrix and correlation plot
 # for the BostonHousing data set. Save your output.
 
@@ -69,10 +57,11 @@ top_3
 
 # 5. Create a new variable call ageGroup quartiles. Divide the age variable
 # into four even sections and assign it to one quartile.
-
-
-
-
+?cut
+x= BostonHousing$age
+qnt <- quantile(x,seq(0,1,.25))
+qnt
+typeof(BostonHousing$age)
 
 # 6. Go to the website listed below. Convert the html table into a
 # dataframe with columns NO, Player, Highlights
@@ -87,7 +76,7 @@ sb <- html_table(t)
 sb <- sb[-(1:2),]
 names(sb) <- c("Number", "Player", "Highlights")
 sb$Number <- 1:nrow(sb)
-head(sb)
+
 
 # 7.Extract the names of the MVPs, Position and Team into columns
 # MVP1, MVP2, Position, Team
@@ -131,6 +120,7 @@ summary(fit)
 # 10. Determine how many
 # Tuesdays fell on the first of the month
 # during the 19th century (1 Jan 1801 to 31 Dec 1901).
+counter < -0
 
 
 
