@@ -54,15 +54,20 @@ absoluted_cor_mat <- absoluted_cor_mat[order(d2$value, decreasing = TRUE), ]
 absoluted_cor_mat
 top_3 <- head(absoluted_cor_mat, 3)
 top_3
+# Therefore the top 3 strongest absolute correlatations are 'crim: crim', 'zn:crim', 'indus:crim'
+
 
 # 5. Create a new variable call ageGroup quartiles. Divide the age variable
 # into four even sections and assign it to one quartile.
-ageGroup <- cut(BostonHousing$age, breaks = min(BostonHousing$age):max(BostonHousing$age),labels = c("Q1", "Q2", "Q3", "Q4"), include.lowest = TRUE)
-ageGroup
-x= BostonHousing$age
-qnt <- quantile(x,seq(0,1,.25))
-qnt
-typeof(BostonHousing$age)
+
+BostonHousing <- within(BostonHousing, ageGroup <- as.integer(cut(age, quantile(age, probs=0:4/4), include.lowest=TRUE)))
+
+# ageGroup <- cut(BostonHousing$age, breaks = min(BostonHousing$age):max(BostonHousing$age),labels = c("Q1", "Q2", "Q3", "Q4"), include.lowest = TRUE)
+# ageGroup
+# x= BostonHousing$age
+# qnt <- quantile(x,seq(0,1,.25))
+# qnt
+# typeof(BostonHousing$age)
 
 # 6. Go to the website listed below. Convert the html table into a
 # dataframe with columns NO, Player, Highlights
@@ -163,18 +168,12 @@ df = data.frame(treatment, calorie_count)
 fit <- aov(calorie_count ~ treatment)
 fit
 summary(fit)
-
+# The Pr(>F) is coming 0.00688.
 
 # 10. Determine how many
 # Tuesdays fell on the first of the month
 # during the 19th century (1 Jan 1801 to 31 Dec 1901).
-counter < -0
-?weekdays.Date
 
-Z <- stats::rnorm(10000)
-table(cut(Z, breaks = -6:6))
-sum(table(cut(Z, breaks = -6:6, labels = FALSE)))
-sum(graphics::hist(Z, breaks = -6:6, plot = FALSE)$counts)
 
 
 
