@@ -29,14 +29,13 @@ for (i in indices){
 # for the BostonHousing data set. Save your output.
 
 correlation <- BostonHousing[indices]
-# round(cor(correlation),2)
 c <- cor(correlation)
 c
 library(lattice)
 hor <- c(BostonHousing[indices])
 ver <- paste(hor, sep="")
-rgb.palette <- colorRampPalette(c("blue", "red"), space = "rgb")
-levelplot(c, main="correlation plot", xlab="", ylab="", col.regions=rgb.palette(120), cuts=100, at=seq(0,1,0.01))
+rgb.palette <- colorRampPalette(c("yellow", "red", "blue"), space = "rgb")
+levelplot(c, main="correlation plot", xlab="", ylab="", col.regions=rgb.palette(120), cuts=100, at=seq(-1,1, 0.01))
 
 
 # 4. Identify the top 3 strongest absolute correlations in the data set. Save your output.
@@ -50,9 +49,9 @@ absoluted_cor_mat <- absolute %>%
   gather(var2, value, -var1)
 
 absoluted_cor_mat
-library(dplyr)
+# library(dplyr)
 absoluted_cor_mat<- absoluted_cor_mat[absoluted_cor_mat$value != 1.0000000, ]
-absoluted_cor_mat <- a[order(a$value, decreasing = TRUE), ]
+absoluted_cor_mat <- absoluted_cor_mat[order(absoluted_cor_mat$value, decreasing = TRUE), ]
 absoluted_cor_mat
 
 top_3 <- data.frame(var1=character(),
@@ -60,7 +59,7 @@ top_3 <- data.frame(var1=character(),
                  value=numeric())
 for (i in 1:6){
   if (i %% 2 == 0){
-    top_3 <- rbind(top_3, data.frame(var1 = a$var1[i], var2 = a$var2[i], value = a$value[i]))
+    top_3 <- rbind(top_3, data.frame(var1 = absoluted_cor_mat$var1[i], var2 = absoluted_cor_mat$var2[i], value = absoluted_cor_mat$value[i]))
   }
 }
 top_3
@@ -71,13 +70,8 @@ top_3
 # into four even sections and assign it to one quartile.
 
 BostonHousing <- within(BostonHousing, ageGroup <- as.integer(cut(age, quantile(age, probs=0:4/4), include.lowest=TRUE)))
+table(BostonHousing$ageGroup)
 
-# ageGroup <- cut(BostonHousing$age, breaks = min(BostonHousing$age):max(BostonHousing$age),labels = c("Q1", "Q2", "Q3", "Q4"), include.lowest = TRUE)
-# ageGroup
-# x= BostonHousing$age
-# qnt <- quantile(x,seq(0,1,.25))
-# qnt
-# typeof(BostonHousing$age)
 
 # 6. Go to the website listed below. Convert the html table into a
 # dataframe with columns NO, Player, Highlights
@@ -121,7 +115,7 @@ for (i in 1:length(q)){
 }
 highlight
 highlight <- as.numeric(highlight)
-class(highlight)
+# class(highlight)
 n <- length(highlight)
 s <- sd(highlight)
 SE <- s/sqrt(n)
@@ -173,19 +167,19 @@ treatment <- c(
   )
 alpha = .05
 calorie_count <- c(food1, food2, food3, food4)
-df = data.frame(treatment, calorie_count)
+df <- data.frame(treatment, calorie_count)
 
 fit <- aov(calorie_count ~ treatment)
 fit
 summary(fit)
-# The Pr(>F) is coming 0.00688.
+# The Pr(>F) is coming 0.00688. As the p-value is less than 0.05, therefore, we shall reject the null ahypothesis.
 
 # 10. Determine how many
 # Tuesdays fell on the first of the month
 # during the 19th century (1 Jan 1801 to 31 Dec 1901).
 library('lubridate')
 date <- seq(from = dmy("01-Jan-1801"), to= dmy("31-Dec-1901"), by="months")
-date <- (which(wday(date, label = TRUE) %in% "Tue"))
-length(date)
+month_starting_with_tue <- (which(wday(date, label = TRUE) %in% "Tue"))
+length(month_starting_with_tue)
 
 
