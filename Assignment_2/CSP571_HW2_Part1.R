@@ -94,6 +94,53 @@ head(sb)
 # in order to accomplish this. I am purposelly leaving that up to you, so that
 # you are starting to develop the types of problem solving skills you'll need
 # to tackle these problems in the wild.
+highlight <- vector()
+q <- strsplit(sb$Highlights, " ")
+q
+for (i in 1:length(q)){
+  if (is.na(q[[i]][3]) == FALSE){
+    if (q[[i]][3] == "passing,"){
+      highlight <- c(highlight, q[[i]][1])
+    }
+  }
+}
+highlight
+highlight <- as.numeric(highlight)
+class(highlight)
+n <- length(highlight)
+s <- sd(highlight)
+SE <- s/sqrt(n)
+xbar <- mean(highlight)
+
+# for 90th% confidence interval
+alpha_1 <- 0.1
+zVal_1 <- qnorm(p = 1-alpha_1/2)
+E_1 <- zVal_1*SE
+conf_1 <- xbar+c(-E_1,E_1)
+
+# for 92.5th% confidence interval
+alpha_2 <- 0.075
+zVal_2 <- qnorm(p = 1-alpha_2/2)
+E_2 <- zVal_2*SE
+conf_2 <- xbar+c(-E_2,E_2)
+
+# for 95th% confidence interval
+alpha_3 <- 0.05
+zVal_3 <- qnorm(p = 1-alpha_3/2)
+E_3 <- zVal_3*SE
+conf_3 <- xbar+c(-E_3,E_3)
+
+# for 97.5th% confidence interval
+alpha_4 <- 0.025
+zVal_4 <- qnorm(p = 1-alpha_4/2)
+E_4 <- zVal_4*SE
+conf_4 <- xbar+c(-E_4,E_4)
+
+# for 99th% confidence interval
+alpha_5 <- 0.01
+zVal_5 <- qnorm(p = 1-alpha_5/2)
+E_5 <- zVal_5*SE
+conf_5 <- xbar+c(-E_5,E_5)
 
 
 
@@ -122,7 +169,7 @@ summary(fit)
 # Tuesdays fell on the first of the month
 # during the 19th century (1 Jan 1801 to 31 Dec 1901).
 counter < -0
-
+?weekdays.Date
 
 Z <- stats::rnorm(10000)
 table(cut(Z, breaks = -6:6))
