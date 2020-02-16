@@ -7,7 +7,6 @@ yourEmail<- "rnair14@hawk.iit.edu"
 library('mlbench')
 data(BostonHousing)
 
-
 # 1. Create a scatterplot matrix of all variables in the data set. Save your output.
 
 pairs(x = BostonHousing, main = "Scatter plot matrix")
@@ -50,11 +49,22 @@ absoluted_cor_mat <- absolute %>%
   rownames_to_column(var = 'var1') %>%
   gather(var2, value, -var1)
 
-absoluted_cor_mat <- absoluted_cor_mat[order(d2$value, decreasing = TRUE), ]
 absoluted_cor_mat
-top_3 <- head(absoluted_cor_mat, 3)
+library(dplyr)
+absoluted_cor_mat<- absoluted_cor_mat[absoluted_cor_mat$value != 1.0000000, ]
+absoluted_cor_mat <- a[order(a$value, decreasing = TRUE), ]
+absoluted_cor_mat
+
+top_3 <- data.frame(var1=character(),
+                    var2=character(),
+                 value=numeric())
+for (i in 1:6){
+  if (i %% 2 == 0){
+    top_3 <- rbind(top_3, data.frame(var1 = a$var1[i], var2 = a$var2[i], value = a$value[i]))
+  }
+}
 top_3
-# Therefore the top 3 strongest absolute correlatations are 'crim: crim', 'zn:crim', 'indus:crim'
+# Therefore the top 3 strongest absolute correlatations are 'rad: tax', 'nox:dis', 'indus:nox'
 
 
 # 5. Create a new variable call ageGroup quartiles. Divide the age variable
@@ -173,9 +183,9 @@ summary(fit)
 # 10. Determine how many
 # Tuesdays fell on the first of the month
 # during the 19th century (1 Jan 1801 to 31 Dec 1901).
-
-
-
-
+library('lubridate')
+date <- seq(from = dmy("01-Jan-1801"), to= dmy("31-Dec-1901"), by="months")
+date <- (which(wday(date, label = TRUE) %in% "Tue"))
+length(date)
 
 
