@@ -11,8 +11,6 @@ data(BostonHousing)
 
 pairs(x = BostonHousing, main = "Scatter plot matrix")
 
-
-
 # 2. For each numeric variable in BostonHousing, create a separate boxplot using
 # "Method 2" listed in the class notes. Do this programmatically; meaning do
 # not simply hardcode the creation of every boxplot. Instead, loop over the
@@ -49,7 +47,7 @@ absoluted_cor_mat <- absolute %>%
   gather(var2, value, -var1)
 
 absoluted_cor_mat
-# library(dplyr)
+library(dplyr)
 absoluted_cor_mat<- absoluted_cor_mat[absoluted_cor_mat$value != 1.0000000, ]
 absoluted_cor_mat <- absoluted_cor_mat[order(absoluted_cor_mat$value, decreasing = TRUE), ]
 absoluted_cor_mat
@@ -103,6 +101,7 @@ head(sb)
 # in order to accomplish this. I am purposelly leaving that up to you, so that
 # you are starting to develop the types of problem solving skills you'll need
 # to tackle these problems in the wild.
+
 highlight <- vector()
 q <- strsplit(sb$Highlights, " ")
 q
