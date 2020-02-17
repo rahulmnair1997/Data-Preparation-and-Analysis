@@ -68,6 +68,7 @@ top_3
 # into four even sections and assign it to one quartile.
 
 BostonHousing <- within(BostonHousing, ageGroup <- as.integer(cut(age, quantile(age, probs=0:4/4), include.lowest=TRUE)))
+# Here Q1 = 1, Q2 = 2, Q3 = 3, Q4 = 4
 table(BostonHousing$ageGroup)
 
 
@@ -84,18 +85,19 @@ sb <- html_table(t)
 sb <- sb[-(1:2),]
 names(sb) <- c("Number", "Player", "Highlights")
 sb$Number <- 1:nrow(sb)
-
+sb
 
 # 7.Extract the names of the MVPs, Position and Team into columns
 # MVP1, MVP2, Position, Team
 sb <- separate(sb, Player, c('MVP', 'Position', 'Team')
                , sep=', ' 
                , remove=TRUE)
-head(sb, 14)
+# head(sb, 14)
 sb <- separate(sb, MVP, c('MVP 1', 'MVP 2')
                , sep=' & '
                , remove=TRUE)
 sb
+
 # 8. Determine the 90th%, 92.5th%, 95th%, 97.5th% and 99th% confidence intervals
 # for the mean of passing yards
 # (as listed in "Highlights" column) for quarterbacks.
@@ -173,14 +175,14 @@ df <- data.frame(treatment, calorie_count)
 fit <- aov(calorie_count ~ treatment)
 fit
 summary(fit)
-# The Pr(>F) is coming 0.00688. As the p-value is less than 0.05, therefore, we shall reject the null hypothesis.
+# The Pr(>F) is coming 0.00688.
 
 # 10. Determine how many
 # Tuesdays fell on the first of the month
 # during the 19th century (1 Jan 1801 to 31 Dec 1901).
 library('lubridate')
 date <- seq(from = dmy("01-Jan-1801"), to= dmy("31-Dec-1901"), by="months")
-month_starting_with_tue <- (which(wday(date, label = TRUE) %in% "Tue"))
-length(month_starting_with_tue)
-
+number_of_tuesday <- (which(wday(date, label = TRUE) %in% "Tue"))
+length(number_of_tuesday)
+# Therefore, 173 tuesdays fell on the first of the month.
 
