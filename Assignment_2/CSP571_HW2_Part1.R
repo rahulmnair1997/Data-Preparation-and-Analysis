@@ -92,10 +92,10 @@ sb <- separate(sb, Player, c('MVP', 'Position', 'Team')
                , sep=', ' 
                , remove=TRUE)
 head(sb, 14)
-qaz <- separate(sb, MVP, c('MVP 1', 'MVP 2')
+sb <- separate(sb, MVP, c('MVP 1', 'MVP 2')
                , sep=' & '
                , remove=TRUE)
-qaz
+sb
 # 8. Determine the 90th%, 92.5th%, 95th%, 97.5th% and 99th% confidence intervals
 # for the mean of passing yards
 # (as listed in "Highlights" column) for quarterbacks.
@@ -109,7 +109,7 @@ q <- strsplit(sb$Highlights, " ")
 q
 for (i in 1:length(q)){
   if (is.na(q[[i]][3]) == FALSE){
-    if (q[[i]][3] == "passing,"){
+    if ((q[[i]][3] == "passing,") | (q[[i]][3] == "passing")){
       highlight <- c(highlight, q[[i]][1])
     }
   }
