@@ -89,11 +89,13 @@ sb$Number <- 1:nrow(sb)
 # 7.Extract the names of the MVPs, Position and Team into columns
 # MVP1, MVP2, Position, Team
 sb <- separate(sb, Player, c('MVP', 'Position', 'Team')
-               , sep=', ' # We want to split this where the comma is located
+               , sep=', ' 
                , remove=TRUE)
-head(sb)
-
-
+head(sb, 14)
+qaz <- separate(sb, MVP, c('MVP 1', 'MVP 2')
+               , sep=' & '
+               , remove=TRUE)
+qaz
 # 8. Determine the 90th%, 92.5th%, 95th%, 97.5th% and 99th% confidence intervals
 # for the mean of passing yards
 # (as listed in "Highlights" column) for quarterbacks.
@@ -171,7 +173,7 @@ df <- data.frame(treatment, calorie_count)
 fit <- aov(calorie_count ~ treatment)
 fit
 summary(fit)
-# The Pr(>F) is coming 0.00688. As the p-value is less than 0.05, therefore, we shall reject the null ahypothesis.
+# The Pr(>F) is coming 0.00688. As the p-value is less than 0.05, therefore, we shall reject the null hypothesis.
 
 # 10. Determine how many
 # Tuesdays fell on the first of the month
