@@ -126,33 +126,39 @@ xbar <- mean(highlight)
 
 # for 90th% confidence interval
 alpha_1 <- 0.1
-zVal_1 <- qnorm(p = 1-alpha_1/2)
-E_1 <- zVal_1*SE
+tt_1 <- qt(1-alpha_1/2, df = 20)
+# zVal_1 <- qnorm(p = 1-alpha_1/2)
+E_1 <- tt_1 * SE
 conf_1 <- xbar+c(-E_1,E_1)
+conf_1
 
 # for 92.5th% confidence interval
 alpha_2 <- 0.075
-zVal_2 <- qnorm(p = 1-alpha_2/2)
-E_2 <- zVal_2*SE
+tt_2 <- qt(1-alpha_2/2, df = 20)
+E_2 <- tt_2*SE
 conf_2 <- xbar+c(-E_2,E_2)
+conf_2
 
 # for 95th% confidence interval
 alpha_3 <- 0.05
-zVal_3 <- qnorm(p = 1-alpha_3/2)
-E_3 <- zVal_3*SE
+tt_3 <- qt(1-alpha_3/2, df = 20)
+E_3 <- tt_3*SE
 conf_3 <- xbar+c(-E_3,E_3)
+conf_3
 
 # for 97.5th% confidence interval
 alpha_4 <- 0.025
-zVal_4 <- qnorm(p = 1-alpha_4/2)
-E_4 <- zVal_4*SE
+tt_4 <- qt(1-alpha_4/2, df = 20)
+E_4 <- tt_4*SE
 conf_4 <- xbar+c(-E_4,E_4)
+conf_4
 
 # for 99th% confidence interval
 alpha_5 <- 0.01
-zVal_5 <- qnorm(p = 1-alpha_5/2)
-E_5 <- zVal_5*SE
+tt_5 <- qt(1-alpha_5/2, df = 20)
+E_5 <- tt_5*SE
 conf_5 <- xbar+c(-E_5,E_5)
+conf_5
 
 
 
@@ -181,7 +187,7 @@ summary(fit)
 # Tuesdays fell on the first of the month
 # during the 19th century (1 Jan 1801 to 31 Dec 1901).
 library('lubridate')
-date <- seq(from = dmy("01-Jan-1801"), to= dmy("31-Dec-1901"), by="months")
+date <- seq(from = dmy("01-Jan-1801"), to= dmy("01-Dec-1901"), by="months")
 number_of_tuesday <- (which(wday(date, label = TRUE) %in% "Tue"))
 length(number_of_tuesday)
 # Therefore, 173 tuesdays fell on the first of the month.
