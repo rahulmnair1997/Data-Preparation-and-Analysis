@@ -26,8 +26,11 @@ file <-  "ACME_Corp.xlsx"
 df <- read_excel(file, sheet = "Sheet1")
 df <- as.data.frame(df)
 summary(df)
+
+# makning the columns such as "policy holder city", "Current Adjuster" to lower cases since the same elements 
+# may have been stored as upper and lower cases.
 df$`Policyholder City` <- tolower(df$`Policyholder City`)
-df$`Policy holder State` <- tolower(df$`Policy holder State`)
+df$`Current Adjuster` <- tolower(df$`Current Adjuster`)
 
 # 2 points
 # 1. The three vendors each use a different definition of housing type. However, ACME's official types
@@ -37,9 +40,7 @@ df$`Policy holder State` <- tolower(df$`Policy holder State`)
 df_2 <- read_excel(file, sheet = "Sheet2")
 df_2 <- as.data.frame(df_2)
 df <- merge(df, df_2, by.x = "Housing Type (Condo, Hotel, Apartment, Single Family Home)", by.y = "Lookup Value")
-df$`Normalized Housing Type`<- df$`Clean Value`
-drop_col <- c("Clean Value")
-df <- df[ , !names(df) %in% drop_col]
+names(df)[names(df) == "Clean Value"] <- "Normalized Housing Type"
 table(df$`Normalized Housing Type`)
 
 # 2 points
@@ -71,6 +72,7 @@ tab
 
 # 2 points
 # 4. Obtain top 20 most frequent Policyholder City and Policy holder State combos
+
 library(dplyr)
 top20 <- as.data.frame(df %>% group_by(df$`Policy holder State`, df$`Policyholder City`) %>% summarise(n = n()))
 top20 <- top20[order(top20$n, decreasing = T), ]
@@ -82,7 +84,7 @@ top20_city_state_combo
 # Note: You'll propsefully need to do some research on how to obtain this.
 # There are a few ways of doing this. 
 
-install.packages('ggmap')
+#install.packages('ggmap')
 library(ggmap)
 key <- "AIzaSyAhqK-mFSJhGfo4Ts5ez3ArH60Nm_JutHI"
 register_google(key, write = T)
@@ -124,7 +126,7 @@ ggplot(maps, aes(x=long, y=lat)) +
   coord_map() +
   geom_point(data=top20_cities, aes(x=top20_cities$lon, y=top20_cities$lat), color="orange")
 
- # 4 points
+# 4 points
 # 8. There are some misspellings and other issues 
 # with the "Current Adjuster" field. Leverage the text
 # analysis tools and levenstein distance to clean up 
@@ -133,16 +135,36 @@ ggplot(maps, aes(x=long, y=lat)) +
 # Hint: you must deal with issues of case, whitespace,
 # ,name misspellings and common name differences (ie Dave vs David). 
 # You will be graded on how well you complete this. 
+
 library(stringdist)
 df$`Current Adjuster` <- tolower(df$`Current Adjuster`)
 a = names(table(df$`Current Adjuster`))
 b = a
-
 stringDist <- stringdistmatrix(a = a, b = b, method = 'lv', useNames = 'strings')
 
-df[,"Current Adjuster Cleaned"] <- 
-  
+library(reshape)
+stringDist2 <- melt(stringDist)
+t <- stringDist2[order(stringDist2$value, decreasing = FALSE),]
+t <- t[t$value >0,]
+t[1:30,]
 
+# As we can see, there are 2 names which are same but still are considered as different because of
+# whitespace and a spelling mistake, so we remove it to make the differently considered names same.
+df$`Current Adjuster Cleaned` <- as.character(df$`Current Adjuster`)
+df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "ira  dobbins"] <- "ira dobbins"
+df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "susan chamberlin"] <- "susan chamberlain"
+
+# Now we apply levenstein distance on the column "Current Adjuster Cleaned" again to show that the misktake 
+# has been corrected.
+c <- names(table(df$`Current Adjuster Cleaned`))
+d <- c
+stringDist_q <- stringdistmatrix(a = c, b = d, method = "lv", useNames = 'strings')
+stringDist_q <- melt(stringDist_q) 
+t_q <- stringDist_q[order(stringDist_q$value, decreasing = F), ]
+t_q <- t_q[t_q$value > 0,]
+t_q[1:20,]
+
+# Thus, the mistakes have been corrected.
 
 # 4 points
 # Question 9:
@@ -164,6 +186,21 @@ n = 3
 state = "CA"
 date = '2015-03'
 
+library(lubridate)
+library(plyr)
+# df_s <- mutate(df, date = ymd(df$`Move-in/Check-In Date`), day = day(date), month = month(date), year = year(date))
+# month <- month(as.Date(date))
+# format(as.Date(date), "%b. %Y")
+# date
+d <- strsplit(date, split = "-")
+d[[1]][2]
+library(zoo)
+z <- read.zoo(text = date, FUN = as.yearmon)
+z
+class(df$`Move-in/Check-In Date`)
+function(n, state. date){
+  m <- month(date)
+}
 
 
 
