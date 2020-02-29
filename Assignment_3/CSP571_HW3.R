@@ -122,7 +122,7 @@ library(mapproj)
 library(maps)
 maps <- map_data("usa")
 ggplot(maps, aes(x=long, y=lat)) +
-  geom_polygon() +
+  borders("state") +
   coord_map() +
   geom_point(data=top20_cities, aes(x=top20_cities$lon, y=top20_cities$lat), color="orange")
 
