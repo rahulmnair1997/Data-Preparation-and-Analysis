@@ -163,6 +163,7 @@ df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "josh hurley"] 
 df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "ron crowder"] <- "ronald crowder"
 df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "lynn harvey"] <- "lynnette harvey"
 df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "tracy smith"] <- "teresa smith"
+df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "chris schemmel"] <- "christopher schemmel"
 df$`Current Adjuster Cleaned`
 
 # Now we shall check the levenshtein distance again to check whether the column has been cleaned or not
