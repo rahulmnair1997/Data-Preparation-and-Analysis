@@ -27,7 +27,8 @@ df <- read_excel(file, sheet = "Sheet1")
 df <- as.data.frame(df)
 summary(df)
 
-# making the columns such as "policy holder city", "Current Adjuster" to lower cases since the same elements 
+# Data Preparation
+# Making the columns such as "policy holder city", "Current Adjuster" to lower cases since the same elements 
 # may have been stored as upper and lower cases.
 df$`Policyholder City` <- tolower(df$`Policyholder City`)
 df$`Current Adjuster` <- tolower(df$`Current Adjuster`)
@@ -41,6 +42,8 @@ df_2 <- read_excel(file, sheet = "Sheet2")
 df_2 <- as.data.frame(df_2)
 df <- merge(df, df_2, by.x = "Housing Type (Condo, Hotel, Apartment, Single Family Home)", by.y = "Lookup Value")
 names(df)[names(df) == "Clean Value"] <- "Normalized Housing Type"
+
+# Checking the "Normalized Housing Type" column
 table(df$`Normalized Housing Type`)
 
 # 2 points
@@ -156,7 +159,20 @@ t[1:20,]
 df$`Current Adjuster Cleaned` <- as.character(df$`Current Adjuster`)
 df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "ira  dobbins"] <- "ira dobbins"
 df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "susan chamberlin"] <- "susan chamberlain"
+df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "josh hurley"] <- "joshua hurley"
+df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "ron crowder"] <- "ronald crowder"
+df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "lynn harvey"] <- "lynnette harvey"
+df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "tracy smith"] <- "teresa smith"
 df$`Current Adjuster Cleaned`
+
+# Now we shall check the levenshtein distance again to check whether the column has been cleaned or not
+c = names(table(df$`Current Adjuster Cleaned`))
+d = c
+stringDist_new <- stringdistmatrix(a = c, b = d, method = 'lv', useNames = 'strings')
+stringDist_new <- melt(stringDist_new)
+t_new <- stringDist_new[order(stringDist_new$value, decreasing = FALSE),]
+t_new <- t_new[t_new$value >0,]
+t_new[1:20,]
 # Thus, the mistakes have been corrected.
 
 # 4 points
@@ -175,6 +191,7 @@ df$`Current Adjuster Cleaned`
 # report for that month.
 # Run this function for the parameters below.
 
+library(lubridate)
 n = 3
 state = "CA"
 date = '2015-03'
@@ -197,18 +214,4 @@ report<-function(n,state,date){
 }
 
 report(n,state, date)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
