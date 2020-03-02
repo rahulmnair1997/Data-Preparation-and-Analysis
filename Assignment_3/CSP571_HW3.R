@@ -27,7 +27,7 @@ df <- read_excel(file, sheet = "Sheet1")
 df <- as.data.frame(df)
 summary(df)
 
-# makning the columns such as "policy holder city", "Current Adjuster" to lower cases since the same elements 
+# making the columns such as "policy holder city", "Current Adjuster" to lower cases since the same elements 
 # may have been stored as upper and lower cases.
 df$`Policyholder City` <- tolower(df$`Policyholder City`)
 df$`Current Adjuster` <- tolower(df$`Current Adjuster`)
@@ -74,8 +74,9 @@ tab
 # 4. Obtain top 20 most frequent Policyholder City and Policy holder State combos
 
 library(dplyr)
-top20 <- as.data.frame(df %>% group_by(df$`Policy holder State`, df$`Policyholder City`) %>% summarise(n = n()))
-top20 <- top20[order(top20$n, decreasing = T), ]
+top20 <- as.data.frame(df %>% group_by(df$`Policy holder State`, df$`Policyholder City`) %>% dplyr::summarise(frequency = n()))
+top20 <- top20[order(top20$frequency, decreasing = T), ]
+names(top20) <- c("Policy Holder State", "Policy Holder City", "Frequency")
 top20_city_state_combo <- head(top20, 20)
 top20_city_state_combo
 
@@ -95,14 +96,16 @@ cityStateLatLon <- function(x){
   return(geo)
 }
 
+# Checking the function
 cityStateLatLon(city[3])
 
 # 4 points
 # 6. Using the function above, obtain the lat lons for each of the top 20 cities.
 
-top20_cities <- count(df, df$`Policyholder City`)
-names(top20_cities) <- c("cities", "freq")
-top20_cities <- top20_cities[order(top20_cities$freq, decreasing = T),]
+top20_cities = table(df$`Policyholder City`)
+top20_cities <- as.data.frame(top20_cities)
+names(top20_cities) <- c("cities", "Freq")
+top20_cities <- top20_cities[order(top20_cities$Freq, decreasing = T),]
 top20_cities <- head(top20_cities, 20)
 top20_cities
 geocodes <- cityStateLatLon(top20_cities$cities)
@@ -146,24 +149,14 @@ library(reshape)
 stringDist2 <- melt(stringDist)
 t <- stringDist2[order(stringDist2$value, decreasing = FALSE),]
 t <- t[t$value >0,]
-t[1:30,]
+t[1:20,]
 
 # As we can see, there are 2 names which are same but still are considered as different because of
 # whitespace and a spelling mistake, so we remove it to make the differently considered names same.
 df$`Current Adjuster Cleaned` <- as.character(df$`Current Adjuster`)
 df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "ira  dobbins"] <- "ira dobbins"
 df$`Current Adjuster Cleaned`[df$`Current Adjuster Cleaned` %in% "susan chamberlin"] <- "susan chamberlain"
-
-# Now we apply levenstein distance on the column "Current Adjuster Cleaned" again to show that the misktake 
-# has been corrected.
-c <- names(table(df$`Current Adjuster Cleaned`))
-d <- c
-stringDist_q <- stringdistmatrix(a = c, b = d, method = "lv", useNames = 'strings')
-stringDist_q <- melt(stringDist_q) 
-t_q <- stringDist_q[order(stringDist_q$value, decreasing = F), ]
-t_q <- t_q[t_q$value > 0,]
-t_q[1:20,]
-
+df$`Current Adjuster Cleaned`
 # Thus, the mistakes have been corrected.
 
 # 4 points
@@ -185,22 +178,36 @@ t_q[1:20,]
 n = 3
 state = "CA"
 date = '2015-03'
+df <- mutate(df, date = ymd(df$`Move-in/Check-In Date`), day = day(date), month = month(date), year = year(date))
 
-library(lubridate)
-library(plyr)
-# df_s <- mutate(df, date = ymd(df$`Move-in/Check-In Date`), day = day(date), month = month(date), year = year(date))
-# month <- month(as.Date(date))
-# format(as.Date(date), "%b. %Y")
-# date
-d <- strsplit(date, split = "-")
-d[[1]][2]
-library(zoo)
-z <- read.zoo(text = date, FUN = as.yearmon)
-z
-class(df$`Move-in/Check-In Date`)
-function(n, state. date){
-  m <- month(date)
+report<-function(n,state,date){
+  d <- strsplit(date, split = "-")
+  y <- as.numeric(d[[1]][1])
+  m <- as.numeric(d[[1]][2])
+  data<-as.data.frame(df %>% group_by(df$year, df$month, df$`Policy holder State`,df$`Occupancy Status`,df$`Current Adjuster Cleaned`) %>%
+                        dplyr::summarise(n = n()))
+  colnames(data)<-c("year","month","state","Occupancy","adjuster","frequency")
+  data$Occupancy<-gsub("Moved Out","Moved-Out",data$Occupancy)
+  data<-cast(data,year+month+state+adjuster~Occupancy,value = "frequency")
+  data[is.na(data)] <- 0
+  colnames(data)<-c("year","month","state","adjuster","Checked_In","Checked_Out","Moved_In","Moved_Out","Occupied", "NA")
+  data$frequency<-data$Checked_In+data$Checked_Out+data$Moved_In+data$Moved_Out+data$Occupied
+  data<- data[data$year == y & data$month ==m & data$state == state,]
+  head(data[order(data$frequency, decreasing = T),],n)
 }
+
+report(n,state, date)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
