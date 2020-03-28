@@ -15,9 +15,12 @@ data <- read.table('https://archive.ics.uci.edu/ml/machine-learning-databases/au
 data <- separate(data = data, col = V1, into = c("mpg", "cylinders", "displacement", "horsepower", "weight", "cceleration", "model year", 'origin'), sep = "\\s+")
 colnames(data)[which(names(data) == "V2")] <- "car name"
 summary(data)
+
+# As we can see the numeric columns are loaded as characters which needs to be converted to numeric
 num_col <- c("mpg", "cylinders", "displacement", "horsepower", "weight", "cceleration", "model year", 'origin')
 data[num_col] <- sapply(data[num_col],as.numeric)
 summary(data)
+# Now all the columns are in their required data type
 
 # 1. Identify the columns (if any) with ANY data that is missing our
 # could be reasonably construed as missing. Replace with median or mode, where
@@ -25,11 +28,13 @@ summary(data)
 # 4 points
 
 # checking the null or missing values
-# Null_Counter <- apply(data, 2, function(x) length(which(x == "" | is.na(x) | x == "NA" | x == "999" | x == "0"))/length(x))
 Null_Counter <- apply(data, 2, function(x) length(which(is.na(x)))/length(x))
 Null_Counter
-summary(data)
-data$horsepower <- apply(data$horsepower, function(x) which(is.na(x)) = 93.5)
+# As we can see, only 'horsepower' has null values.
+# And as the data type of 'horsepower' is nemric, we will go for the median value
+summary(data$horsepower)
+data$horsepower[is.na(data$horsepower)] <- 93.5
+
 
 # 2. Identify all of the categorical variables, 
 # all of the numeric variables
