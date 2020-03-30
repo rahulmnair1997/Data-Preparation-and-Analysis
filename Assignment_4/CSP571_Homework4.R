@@ -13,7 +13,7 @@ library(tidyr)
 data <- read.table('https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data',
                        header=F, sep = '\t')
 data <- separate(data = data, col = V1, into = c("mpg", "cylinders", "displacement", "horsepower", "weight", "acceleration", "model_year", 'origin'), sep = "\\s+")
-colnames(data)[which(names(data) == "V2")] <- "car name"
+colnames(data)[which(names(data) == "V2")] <- "car_name"
 summary(data)
 
 # As we can see the numeric columns are loaded as characters which needs to be converted to numeric
@@ -120,8 +120,6 @@ r_squared
 # 4 points
 p_val <- summary(model)$coefficients[,4]
 
-summary(model)$coefficients[,4]
-
 req_col <- vector()
 for (i in xvars){
   if (p_val[i] <= 0.05){
@@ -147,7 +145,18 @@ r_squared2
 # Then calculate the R**2 on a test set. You will likely encounter an error.
 # Explain why this error occurs. Fix this error.
 # 4 points
+varname <- names(data)
+varname <- varname[-1]
+modelForm3 <- createModelFormula(target_var, varname, includeIntercept = FALSE)
+modelForm3
+model3 <- lm(modelForm3, data = Train)
+target_var_hat3 <- paste0(target_var, "_hat3")
+Test[,target_var_hat3] <- predict(model3, Test)
+SST3 <- sum((Test[,target_var] - mean(Test[,target_var]))^2)
+SSR3 <- sum((Test[,target_var_hat3] - mean(Test[,target_var]))^2)
 
+r_squared2 <- SSR2/SST2
+r_squared2
 
 
 # 10. Determine the relationship between model year and mpg.
@@ -155,7 +164,11 @@ r_squared2
 # Theorize why this relationship might occur.
 # 4 points
 
-
+library(ggplot2)
+ggplot(data, aes(x = model_year, y = mpg)) + geom_point() +  geom_smooth()
+# As we can see from the graph, there is a positive correlation between mpg and model year,
+# which makes sense. As the years go by, the technology improves and the engines starts 
+# performing better, thus giving better mpg.
 
 
 # 11. Using only the variables provided, build the best linear model 
