@@ -10,7 +10,7 @@
 
 # Load Data
 library(tidyr)
-data <- read.table('https://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data',
+data <- read.table('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data',
                        header=F, sep = '\t')
 data <- separate(data = data, col = V1, into = c("mpg", "cylinders", "displacement", "horsepower", "weight", "acceleration", "model_year", 'origin'), sep = "\\s+")
 colnames(data)[which(names(data) == "V2")] <- "car_name"
@@ -18,6 +18,7 @@ summary(data)
 
 # As we can see the numeric columns are loaded as characters which needs to be converted to numeric
 num_col <- c("mpg", "cylinders", "displacement", "horsepower", "weight", "acceleration", "model_year", 'origin')
+# num_col <- c("mpg", "displacement", "horsepower", "weight", "acceleration")
 data[num_col] <- sapply(data[num_col],as.numeric)
 summary(data)
 # Now all the columns are in their required data type
@@ -31,9 +32,12 @@ summary(data)
 Null_Counter <- apply(data, 2, function(x) length(which(is.na(x)))/length(x))
 Null_Counter
 # As we can see, only 'horsepower' has null values.
-# And as the data type of 'horsepower' is nemric, we will go for the median value
+# And as the data type of 'horsepower' is numeric, we will go for the median value
 summary(data$horsepower)
-data$horsepower[is.na(data$horsepower)] <- 93.5
+data$horsepower[is.na(data$horsepower)] <- mean(data$horsepower, na.rm = T)
+summary(data$horsepower)
+# Now we see there is no 'NA' values left
+
 
 # 2. Identify all of the categorical variables, 
 # all of the numeric variables
@@ -53,6 +57,7 @@ for (i in indices){
   hist(data[,i], main = names(data[i]))
 }
 
+pairs(data)
 # we will create bar chart for 'car name' since it is categorical
 ?barplot
 car_name_count <- as.data.frame(table(data$`car name`))
@@ -84,14 +89,13 @@ inTrain <- createDataPartition(y = data$mpg, p = trainPct, list = FALSE)
 Train <- data[inTrain,]
 Test <- data[-inTrain,]
 
-# check whether the parition is done correct
+# check whether the parition is done correct or not
 stopifnot(nrow(Train) + nrow(Test) == nrow(data))
 
 # 7. Fit a linear model to the data using the numeric variables only. Calculate the R**2 on the test set.
 # 3 points
 xvars <- numVars[-1]
 target_var <- 'mpg'
-
 createModelFormula <- function(targetVar, xVars, includeIntercept = TRUE){
   if(includeIntercept){
     modelForm <- as.formula(paste(targetVar, "~", paste(xVars, collapse = ' + ')))
@@ -104,10 +108,10 @@ createModelFormula <- function(targetVar, xVars, includeIntercept = TRUE){
 modelForm <- createModelFormula(target_var, xvars, includeIntercept = FALSE)
 modelForm
 model <- lm(modelForm, data = Train)
+model
 summary(model)
 
 target_var_hat <- paste0(target_var, "_hat")
-# target_var_hat
 Test[,target_var_hat] <- predict(model, Test)
 SST <- sum((Test[,target_var] - mean(Test[,target_var]))^2)
 SSR <- sum((Test[,target_var_hat] - mean(Test[,target_var]))^2)
@@ -137,7 +141,8 @@ SSR2 <- sum((Test[,target_var_hat2] - mean(Test[,target_var]))^2)
 
 r_squared2 <- SSR2/SST2
 r_squared2
-# as We can see the new r-sqaured is lesser than the previous one. Therefore, there has been an 
+req_col
+# as We can see the new r-sqaured is slightly greater than the previous one. Therefore, there has been an 
 # improvement in the performance
 
 
@@ -145,7 +150,27 @@ r_squared2
 # Then calculate the R**2 on a test set. You will likely encounter an error.
 # Explain why this error occurs. Fix this error.
 # 4 points
+
 varname <- names(data)
+varname <- varname[-1]
+modelForm3 <- createModelFormula(target_var, varname, includeIntercept = FALSE)
+modelForm3
+model3 <- lm(modelForm3, data = Train)
+target_var_hat3 <- paste0(target_var, "_hat3")
+Test[,target_var_hat3] <- predict(model3, Test)
+# We are getting an High Dimensionality error in the categorical variable 'car_name'. So now, we are 
+# going to encode these categories in their frequencies.
+t <- sort(table(data[,'car_name']), decreasing = TRUE)
+t[1:20]
+CarNameFreq <- as.data.frame(t)
+names(CarNameFreq) <- c('car_name', 'Count')
+head(CarNameFreq)
+newData <- merge(x=data, y = CarNameFreq, all.x = TRUE, by = 'car_name')
+head(newData)
+inTrain <- createDataPartition(y = newData$mpg, p = trainPct, list = FALSE)
+Train <- newData[inTrain,]
+Test <- newData[-inTrain,]
+varname <- names(which(sapply(newData, is.numeric)))
 varname <- varname[-1]
 modelForm3 <- createModelFormula(target_var, varname, includeIntercept = FALSE)
 modelForm3
@@ -155,9 +180,9 @@ Test[,target_var_hat3] <- predict(model3, Test)
 SST3 <- sum((Test[,target_var] - mean(Test[,target_var]))^2)
 SSR3 <- sum((Test[,target_var_hat3] - mean(Test[,target_var]))^2)
 
-r_squared2 <- SSR2/SST2
-r_squared2
-
+r_squared3 <- SSR3/SST3
+r_squared3
+# we see there has been a further improvenment in the r**2 value.
 
 # 10. Determine the relationship between model year and mpg.
 # Interpret this relationship.
@@ -166,7 +191,7 @@ r_squared2
 
 library(ggplot2)
 ggplot(data, aes(x = model_year, y = mpg)) + geom_point() +  geom_smooth()
-# As we can see from the graph, there is a positive correlation between mpg and model year,
+# As we can see from the graph, there is a weak positive correlation between mpg and model year,
 # which makes sense. As the years go by, the technology improves and the engines starts 
 # performing better, thus giving better mpg.
 
@@ -190,3 +215,13 @@ ggplot(data, aes(x = model_year, y = mpg)) + geom_point() +  geom_smooth()
 # Best Adjusted R**2 without brand variable:
 # Best Adjusted R**2 with brand variable: 
 # 4 points
+
+
+
+
+
+
+
+
+
+
