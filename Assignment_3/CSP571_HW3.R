@@ -90,7 +90,7 @@ top20_city_state_combo
 
 #install.packages('ggmap')
 library(ggmap)
-key <- "AIzaSyAhqK-mFSJhGfo4Ts5ez3ArH60Nm_JutHI"
+key <- # enter your API key
 register_google(key, write = T)
 city <- df$`Policyholder City`
 state <- df$`Policy holder State`
